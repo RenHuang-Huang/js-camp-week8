@@ -14,6 +14,9 @@ const { API_PATH, BASE_URL, ADMIN_TOKEN } = require('./config');
 async function fetchProducts() {
   // 請實作此函式
   // 回傳 response.data.products
+  const response = await fetch(`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/products`);
+  const data = await response.json();
+  return data.products;
 }
 
 /**
@@ -22,6 +25,13 @@ async function fetchProducts() {
  */
 async function fetchCart() {
   // 請實作此函式
+  const response = await fetch(`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts`);
+	const data = await response.json();
+	return {
+		carts: data.carts,
+		total: data.total,
+		finalTotal: data.finalTotal,
+	};
 }
 
 /**
@@ -31,7 +41,19 @@ async function fetchCart() {
  * @returns {Promise<Object>} - 回傳購物車資料
  */
 async function addToCart(productId, quantity) {
-  // 請實作此函式
+  const response = await fetch(`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts`,
+		{
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ data: { productId, quantity } }),
+		},
+	);
+	const data = await response.json();
+	return {
+		carts: data.carts,
+		total: data.total,
+		finalTotal: data.finalTotal,
+	};
 }
 
 /**
@@ -41,7 +63,19 @@ async function addToCart(productId, quantity) {
  * @returns {Promise<Object>} - 回傳購物車資料
  */
 async function updateCartItem(cartId, quantity) {
-  // 請實作此函式
+  const response = await fetch(`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts`,
+		{
+			method: "PATCH",
+			headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data: { id: cartId, quantity } }),
+		},
+	);
+	const data = await response.json();
+	return {
+		carts: data.carts,
+		total: data.total,
+		finalTotal: data.finalTotal,
+	};
 }
 
 /**
@@ -50,7 +84,17 @@ async function updateCartItem(cartId, quantity) {
  * @returns {Promise<Object>} - 回傳購物車資料
  */
 async function deleteCartItem(cartId) {
-  // 請實作此函式
+  const response = await fetch(`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts/${cartId}`,
+		{
+			method: "DELETE",
+		},
+	);
+	const data = await response.json();
+	return {
+		carts: data.carts,
+		total: data.total,
+		finalTotal: data.finalTotal,
+	};
 }
 
 /**
@@ -59,6 +103,16 @@ async function deleteCartItem(cartId) {
  */
 async function clearCart() {
   // 請實作此函式
+  const response = await fetch(
+		`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts`,
+		{ method: "DELETE" },
+	);
+	const data = await response.json();
+	return {
+		carts: data.carts,
+		total: data.total,
+		finalTotal: data.finalTotal,
+	};
 }
 
 /**
@@ -68,6 +122,15 @@ async function clearCart() {
  */
 async function createOrder(userInfo) {
   // 請實作此函式
+  const response = await fetch(`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/orders`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data: userInfo }),
+    },
+  );
+  const data = await response.json();
+  return data;
 }
 
 // ========== 管理員 API ==========
@@ -85,7 +148,13 @@ async function createOrder(userInfo) {
  * @returns {Promise<Array>}
  */
 async function fetchOrders() {
-  // 請實作此函式
+  const response = await fetch(`${BASE_URL}/api/livejs/v1/admin/${API_PATH}/orders`, {
+    headers: {
+      authorization: ADMIN_TOKEN
+    }
+  });
+  const data = await response.json();
+  return data.orders;
 }
 
 /**
@@ -96,6 +165,16 @@ async function fetchOrders() {
  */
 async function updateOrderStatus(orderId, isPaid) {
   // 請實作此函式
+  const response = await fetch(`${BASE_URL}/api/livejs/v1/admin/${API_PATH}/orders/`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: ADMIN_TOKEN
+    },
+    body: JSON.stringify({ data: { id: orderId, isPaid: isPaid } }),
+  });
+  const data = await response.json();
+  return data;
 }
 
 /**
@@ -105,6 +184,14 @@ async function updateOrderStatus(orderId, isPaid) {
  */
 async function deleteOrder(orderId) {
   // 請實作此函式
+  const response = await fetch(`${BASE_URL}/api/livejs/v1/admin/${API_PATH}/orders/${orderId}`, {
+    method: "DELETE",
+    headers: {
+      authorization: ADMIN_TOKEN
+    }
+  });
+  const data = await response.json();
+  return data;
 }
 
 module.exports = {
