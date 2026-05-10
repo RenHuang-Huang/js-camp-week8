@@ -74,7 +74,7 @@ async function main() {
       tel: '0912345678',
       email: 'test@example.com',
       address: '台北市信義區信義路五段7號',
-      payment: '信用卡'
+      payment: 'Credit Card'
     };
     const orderResult = await orderService.placeOrder(userInfo);
     if (orderResult.success) {
